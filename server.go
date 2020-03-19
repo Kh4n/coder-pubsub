@@ -1,6 +1,4 @@
-/*
-Simple pubsub system. Does not support topics
-*/
+// Simple pubsub system. Does not support topics
 package main
 
 import (
@@ -18,7 +16,7 @@ type subscriber struct {
 	msgs   chan string
 }
 
-// Server : Pub/Sub server using websockets
+// Server is a Pub/Sub server using websockets
 type Server struct {
 	upgrader *websocket.Upgrader
 
