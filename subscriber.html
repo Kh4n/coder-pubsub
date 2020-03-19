@@ -1,0 +1,15 @@
+<html>
+    <script>
+        var ws = new WebSocket("ws://localhost:8080/ws/subscribe")
+        ws.addEventListener('message', function (event) {
+            console.log('Message from server ', event.data)
+            logDiv = document.getElementById("log")
+            logDiv.innerHTML += event.data + "<br>"
+        })
+    </script>
+    <body>
+        Messages:
+        <div id="log" style="height:512px;width:512px;border:1px solid #ccc;font:12px/26px Monospace">
+        </div>
+    </body>
+</html>
