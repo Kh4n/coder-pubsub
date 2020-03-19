@@ -59,7 +59,8 @@ func (s *Server) handleSubscribeSocket(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		for {
 			// important to read messages so we know when the connection is closed
-			// also need to remove the subscriber, as the close handler is not always called
+			// if we do not read, the close handler will not be called, so we have to read
+			// also need to remove the subscriber, as the close handler is only called for normal closures
 			_, _, err := c.ReadMessage()
 			if err != nil {
 				log.Println("Error reading message:", err)
@@ -111,12 +112,17 @@ func (s *Server) handleBroadcast(w http.ResponseWriter, r *http.Request) {
 	s.subscribers = s.subscribers[:h]
 }
 
-// Run : Sets up handlers and runs the server on the given port
-func (s *Server) Run(port uint) {
+func (s *Server) createMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws/subscribe", s.handleSubscribeSocket)
 	mux.HandleFunc("/broadcast", s.handleBroadcast)
 	mux.Handle("/", http.FileServer(http.Dir(".")))
+	return mux
+}
+
+// Run : Sets up handlers and runs the server on the given port
+func (s *Server) Run(port uint) {
+	mux := s.createMux()
 	portStr := fmt.Sprintf(":%d", port)
 	log.Fatal(http.ListenAndServe(portStr, mux))
 }
