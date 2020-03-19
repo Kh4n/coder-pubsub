@@ -101,7 +101,7 @@ func TestServerSimple(t *testing.T) {
 		}
 
 		if len(s.subscribers) != 1 {
-			t.Errorf("Unexpected number of subscribers")
+			t.Errorf("Unexpected number of subscribers, expected %d but have %d", 1, len(s.subscribers))
 			return
 		}
 
